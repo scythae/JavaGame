@@ -1,68 +1,18 @@
 package game.gfx.animations;
 
+import game.gfx.Image;
+
 public class Animator {
-	private enum State {IDLE, BIRTH, DEATH, MOVE}
-	
+
 	private class AnimationExt extends Animation{
-		
+		protected AnimationExt(Image[] images) {
+			super(images);
+		}		
 	}
 	
-	private Animation[] animations;
+	public Animation idle, birth, death, move;	
 	private AnimationExt currentAnimation;
 	
-	public Animator() {
-		animations = new Animation[State.values().length];
-		playIdle();
-	}
-	
-	private Animation getAnimation(State state) {
-		if (animations[state.ordinal()] == null)
-			animations[state.ordinal()] = new AnimationExt();
-		
-		return animations[state.ordinal()];
-	}
-	
-	private void playAnimation(State state) {
-		Animation newAnimation = getAnimation(state);
-		if (newAnimation == currentAnimation)
-			return;		
-		
-		currentAnimation =  (AnimationExt) newAnimation ;
-		currentAnimation.reset();
-	}	
-	
-	public Animation getIdle() {		
-		return getAnimation(State.IDLE);
-	}	
-	
-	public void playIdle() {		
-		playAnimation(State.IDLE);
-	}		
-	
-	public Animation getBirth() {		
-		return getAnimation(State.BIRTH);
-	}	
-	
-	public void playBirth() {		
-		playAnimation(State.BIRTH);
-	}	
-	
-	public Animation getDeath() {		
-		return getAnimation(State.DEATH);
-	}	
-	
-	public void playDeath() {		
-		playAnimation(State.DEATH);
-	}
-	
-	public Animation getMove() {		
-		return getAnimation(State.MOVE);
-	}	
-	
-	public void playMove() {		
-		playAnimation(State.MOVE);
-	}	
-		
 	public void tick() {
 		if (currentAnimation != null)
 			currentAnimation.tick();		
@@ -71,5 +21,54 @@ public class Animator {
 	public void render(int x, int y) {
 		if (currentAnimation != null)
 			currentAnimation.render(x, y);
+	}	
+	
+	private Animation createAnimation(Image[] images) {		
+		return new AnimationExt(images);
 	}
+	
+	private void playAnimation(Animation newAnimation) {
+		if (newAnimation == currentAnimation || newAnimation == null)
+			return;		
+		
+		currentAnimation = (AnimationExt) newAnimation ;
+		currentAnimation.reset();
+		currentAnimation.play();
+	}	
+	
+	public Animation createIdle(Image[] images) {		
+		idle = createAnimation(images);
+		return idle;
+	}		
+	
+	public Animation createBirth(Image[] images) {		
+		birth = createAnimation(images);
+		return birth;
+	}
+	
+	public Animation createDeath(Image[] images) {		
+		death = createAnimation(images);
+		return death;
+	}
+
+	public Animation createMove(Image[] images) {		
+		move = createAnimation(images);
+		return move;
+	}		
+	
+	public void playIdle() {		
+		playAnimation(idle);
+	}		
+	
+	public void playBirth() {		
+		playAnimation(birth);
+	}
+	
+	public void playDeath() {		
+		playAnimation(death);
+	}
+
+	public void playMove() {		
+		playAnimation(move);
+	}	
 }

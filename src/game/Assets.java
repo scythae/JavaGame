@@ -1,24 +1,23 @@
 package game;
 
-import java.awt.image.BufferedImage;
-
-import game.gfx.ImageLoader;
+import game.display.Display;
+import game.gfx.Image;
 import game.gfx.SpriteSheet;
 
 public class Assets {
-	public static BufferedImage Pool, Grass, Stone, Snail1, Snail2;
-	public static BufferedImage[] SnailMove, SnailStand;
+	public static Image Pool, Grass, Stone, Snail1, Snail2;
+	public static Image[] SnailMove, SnailStand;
 	
-	public static void init() {
-		Pool = ImageLoader.loadImage("/textures/pool.png");	
+	public static void init(Display display) {
+		Pool = display.createImage("/textures/pool.png");	
 		
-		SpriteSheet sheet = new SpriteSheet(ImageLoader.loadImage("/textures/spritesheet.png"), 32, 32);
+		SpriteSheet sheet = new SpriteSheet(display.createImage("/textures/spritesheet.png"), 32, 32);
 		Grass = sheet.getSprite(0, 0); 
 		Stone = sheet.getSprite(0, 1);
-		SnailMove = new BufferedImage[2];
+		SnailMove = new Image[2];
 		SnailMove[0] = sheet.getSprite(0, 2);
 		SnailMove[1] = sheet.getSprite(0, 3);
-		SnailStand = new BufferedImage[1];
+		SnailStand = new Image[1];
 		SnailStand[0] = SnailMove[0];
 	}
 }

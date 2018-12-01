@@ -1,7 +1,9 @@
 package game;
 
 import game.display.Display;
-import game.input.SwingKeyManager;
+import game.frameworks.Framework;
+import game.frameworks.swing.SwingFramework;
+import game.input.InputManager;
 import game.state.GameState;
 import game.state.State;
 
@@ -12,12 +14,14 @@ public class GameCore implements Runnable{
 	private Thread thread;
 	private Boolean running = false;	
 	
-	private Frame frame;
+	private Framework framework;
+	private Display display;
+	private InputManager inputManager;
 	
 	private int fps;
 	private double nanoSecPerFrame;	
 	private final double nanoSecPerSec = 1_000_000_000;
-	private SwingKeyManager keyboardManager;
+
 	
 	State gameState;
 	
@@ -28,13 +32,10 @@ public class GameCore implements Runnable{
 	}
 	
 	private void init() {
-		frame = Frame.getInstance(title, width, height);
-		Display.setDisplay(frame.getDisplay());
-//		SwingKeyManager.setKeyManager(frame.getDisplay());
-		keyboardManager = new SwingKeyManager();
-
-		
-		Assets.init();		
+		framework = new SwingFramework(title, width, height);
+		display = framework.GetDisplay();
+		inputManager = framework.GetInputManager();
+		Assets.init(display);		
 		
 		gameState = new GameState();
 		State.setState(gameState);
@@ -56,12 +57,12 @@ public class GameCore implements Runnable{
 	}
 	
 	private void renderWrap() {		
-		Display.drawBegin();
+		display.drawBegin();
 		
 		render();	
 		
-		Display.drawString("FPS " + fps, 0, height);		
-		Display.drawEnd();
+		display.drawString("FPS " + fps, 0, height);		
+		display.drawEnd();
 	}
 	
 	public void run() {

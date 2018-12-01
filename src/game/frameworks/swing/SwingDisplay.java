@@ -1,36 +1,46 @@
-package game.display;
+package game.frameworks.swing;
 
 import java.awt.Canvas;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
-public class SwingDisplay extends Display{
+import game.display.Display;
+import game.gfx.Image;
+
+public class SwingDisplay implements Display{	
 	private Canvas canvas;
 	static private BufferStrategy bs;
 	static private Graphics g;		
-
+	static protected int scale = 3;	
+	private int width, height;
+	
 	public SwingDisplay(Canvas canvas) {
 		this.canvas = canvas;
 		this.width = canvas.getWidth();
 		this.height = canvas.getHeight();
+		
+		SwingImage.display = this;
 	}
 
 	@Override
-	protected void drawImp(BufferedImage image, int x, int y) {
-		int xSize = image.getWidth() * scale;
-		int ySize = image.getHeight() * scale;
-				
-		g.drawImage(image, x * scale, y * scale, xSize, ySize, null);				
+	public void draw(Image image, int x, int y) {
+		BufferedImage bi = ((SwingImage) image).getBufferedImage();
+		x = x * scale;
+		y = y * scale;
+		int xSize = bi.getWidth() * scale;
+		int ySize = bi.getHeight() * scale;
+						
+		g.drawImage(bi, x, y, xSize, ySize, null);				
 	}
 
 	@Override
-	protected void drawStringImp(String string, int x, int y) {
+	public void drawString(String string, int x, int y) {
 		g.drawString(string, x, y);	
 	}
 
 	@Override
-	protected void drawBeginImp() {
+	public void drawBegin() {
 		if (g != null)
 			return;
 		
@@ -45,12 +55,18 @@ public class SwingDisplay extends Display{
 	}
 
 	@Override
-	protected void drawEndImp() {
-		if (g == null)
+	public void drawEnd() {
+	  	if (g == null)
 			return;
 		
 		bs.show();
 		g.dispose();	
 		g = null;		
 	}
+
+	@Override
+	public Image createImage(String path) {
+		return new SwingImage().loadFromFile(path);
+	}
 }
+

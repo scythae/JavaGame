@@ -1,93 +1,53 @@
 package game.gfx.animations;
 
-import java.awt.image.BufferedImage;
+import game.gfx.Image;
 
-import game.display.Display;
-
-public class Animation {
-	private static int FRAMES_PER_IMAGE_DEFAULT = 6;
-	private boolean loop = false;
-	private boolean reversible = false;	
-
+public class Animation extends AnimationBase{
+	private Image[] images;
 	
-	private BufferedImage[] images;
-	private int framesPerImage = FRAMES_PER_IMAGE_DEFAULT;	
-	private float frameIndex, framesPerTick = 1; 
-	private int imageIndex, imageIndexMax;	
-	private boolean playback, stopped;
+	static private int getImageCount(Image[] images) {
+		if (images == null)
+			throw new RuntimeException("Animation must contain positive number of images");	
+		
+		return images.length;
+	}
 	
-	public Animation setImages(BufferedImage[] images) {
+	protected Animation(Image[] images) {
+		super(getImageCount(images));		
 		this.images = images;
-		imageIndexMax = images.length - 1;
-		reset();		
-		return this;
 	}
 	
 	public Animation setReversible() {
-		this.reversible = true;
-		reset();		
-		return this;
+		reversible = true;
+		return reseted();
 	}	
 	
 	public Animation setLooped() {
-		this.loop = true;
-		reset();		
-		return this;
+		loop = true;
+		return reseted();
 	}		
 
 	public Animation setFramesPerImage(int framesPerImage) {
 		this.framesPerImage = framesPerImage;
+		return reseted();	
+	}	
+	
+	private Animation reseted() {
+		stop();
 		reset();		
 		return this;		
 	}	
 	
-	protected void reset() {
-		frameIndex = 0;
-		imageIndex = 0;
-		playback = false;
-		stopped = false;
-	}
-	
-	protected void setSpeed(float speed) {
-		framesPerTick = 1 * Math.abs(speed);
-	}
-	
 	protected void tick() {
-		if (images == null)
-			return;
-		
-		if (stopped)
-			return;
-		
-		frameIndex += framesPerTick;
-		if (frameIndex < framesPerImage)
-			return;
-		
-		frameIndex = 0;
-		
-		if (playback) {
-			if (imageIndex > 0)
-				imageIndex--;
-			else if (loop)
-				playback = false;
-			else
-				stopped = true;
-		} else {
-			if (imageIndex < imageIndexMax)
-				imageIndex++;
-			else if (reversible) 
-				playback = true;					
-			else if (loop)
-				imageIndex = 0;
-			else
-				stopped = true;
-		}		
+		onNextFrame();
 	}
+	
+	private Image getCurrentImage() {
+		int currentImageIndex = getCurrentImageIndex();
+		return images[currentImageIndex];
+	}	
 	
 	protected void render(int x, int y) {
-		if (images == null)
-			return;		
-		
-		Display.draw(images[imageIndex], x, y);
+		getCurrentImage().draw(x, y);
 	}
 }
