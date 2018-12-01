@@ -63,10 +63,5 @@ public class SwingDisplay implements Display{
 		g.dispose();	
 		g = null;		
 	}
-
-	@Override
-	public Image createImage(String path) {
-		return new SwingImage().loadFromFile(path);
-	}
 }
 

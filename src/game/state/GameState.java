@@ -2,9 +2,8 @@ package game.state;
 
 import game.entities.creature.Player;
 
-public class GameState extends State{
-
-	Player player;
+public class GameState extends State{	
+	private Player player;
 	
 	public GameState() {		
 		player = new Player(20, 0);

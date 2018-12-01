@@ -7,7 +7,9 @@ import game.input.InputManager;
 import game.state.GameState;
 import game.state.State;
 
-public class GameCore implements Runnable{
+public class Game implements Runnable{
+	static private Game instance;
+	
 	private int width, height;
 	private String title;
 	
@@ -16,32 +18,43 @@ public class GameCore implements Runnable{
 	
 	private Framework framework;
 	private Display display;
-	private InputManager inputManager;
+	private InputManager input;
 	
 	private int fps;
 	private double nanoSecPerFrame;	
 	private final double nanoSecPerSec = 1_000_000_000;
-
 	
 	State gameState;
 	
-	public GameCore(String title, int width, int height) {
+	public Game(String title, int width, int height) {
 		this.width = width;
 		this.height = height;
 		this.title = title;		
-	}
+		
+		instance = this;
+	}	
 	
 	private void init() {
 		framework = new SwingFramework(title, width, height);
 		display = framework.GetDisplay();
-		inputManager = framework.GetInputManager();
-		Assets.init(display);		
+		input = framework.GetInputManager();
+		
+		Assets.init();		
 		
 		gameState = new GameState();
 		State.setState(gameState);
 		
 		setFrameRate(60);
 	}
+	
+	static public Framework getFramework() {
+		return instance.framework;
+	}
+
+	static public InputManager getInput() {
+		return instance.input;
+	}
+
 	private void setFrameRate(int frameRate) {
 		nanoSecPerFrame = nanoSecPerSec / frameRate;		
 	}	

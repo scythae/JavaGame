@@ -6,6 +6,7 @@ import javax.swing.JFrame;
 
 import game.display.Display;
 import game.frameworks.Framework;
+import game.gfx.Image;
 import game.input.InputManager;
 
 public class SwingFramework implements Framework {
@@ -42,5 +43,10 @@ public class SwingFramework implements Framework {
 	@Override
 	public InputManager GetInputManager() {
 		return inputManager;
+	}
+
+	@Override
+	public Image createImage(String path) {
+		return new SwingImage().loadFromFile(path);
 	}
 }

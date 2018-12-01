@@ -7,5 +7,4 @@ public interface Display {
 	void drawString(String string, int x, int y);	
 	void drawBegin();
 	void drawEnd();	
-	Image createImage(String path);
 }

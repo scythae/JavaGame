@@ -1,23 +1,22 @@
 package game.gfx.animations;
 
-public class AnimationBase {
-	private static int FRAMES_PER_IMAGE_DEFAULT = 6;
+class AnimationCore {
 	protected boolean loop = false;
 	protected boolean reversible = false;	
-
-	protected int framesPerImage = FRAMES_PER_IMAGE_DEFAULT;	
+	protected int imageCount = 0;	
+	protected int framesPerImage = 0;
+	
 	private float frameIndex, framesPerTick = 1; 
 	private int imageIndex, imageIndexMax = -1;	
 	private boolean playback, running = false;
 	
-	protected AnimationBase(int imageCount) {
-		imageIndexMax = imageCount - 1;		
-		if (imageIndexMax < 0)
-			throw new RuntimeException("Animation must contain positive number of images");	
-	}
-	
 	protected void play() {		
-		reset();		
+		reset();	
+		
+		if (imageCount <= 0)
+			return;
+		
+		imageIndexMax = imageCount - 1;		
 		running = true;
 	}		
 

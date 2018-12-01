@@ -7,8 +7,8 @@ public class Player extends Creature{
 	public Player(float x, float y) {
 		super(x, y);
 		
-		animator.createBirth(Assets.SnailStand);
-		animator.createMove(Assets.SnailMove).setFramesPerImage(12).setLooped();
+		animator.getFactory().setImages(Assets.SnailStand).createBirth();
+		animator.getFactory().setImages(Assets.SnailMove).setFramesPerImage(12).setLooped().createMove();
 		animator.playMove();
 	}
 
@@ -20,5 +20,5 @@ public class Player extends Creature{
 	@Override
 	protected void renderEntity() {
 		
-	}
+	}	
 }

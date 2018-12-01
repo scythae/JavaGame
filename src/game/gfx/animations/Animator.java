@@ -1,60 +1,32 @@
 package game.gfx.animations;
 
-import game.gfx.Image;
-
-public class Animator {
-
-	private class AnimationExt extends Animation{
-		protected AnimationExt(Image[] images) {
-			super(images);
-		}		
-	}
+public class Animator {	
+	Animation idle, birth, death, move;	
+	private Animation currentAnimation;
 	
-	public Animation idle, birth, death, move;	
-	private AnimationExt currentAnimation;
 	
-	public void tick() {
+	protected void tick() {
 		if (currentAnimation != null)
 			currentAnimation.tick();		
 	}
 	
-	public void render(int x, int y) {
+	protected void render(int x, int y) {
 		if (currentAnimation != null)
 			currentAnimation.render(x, y);
 	}	
-	
-	private Animation createAnimation(Image[] images) {		
-		return new AnimationExt(images);
-	}
 	
 	private void playAnimation(Animation newAnimation) {
 		if (newAnimation == currentAnimation || newAnimation == null)
 			return;		
 		
-		currentAnimation = (AnimationExt) newAnimation ;
+		currentAnimation = newAnimation ;
 		currentAnimation.reset();
 		currentAnimation.play();
 	}	
 	
-	public Animation createIdle(Image[] images) {		
-		idle = createAnimation(images);
-		return idle;
-	}		
-	
-	public Animation createBirth(Image[] images) {		
-		birth = createAnimation(images);
-		return birth;
-	}
-	
-	public Animation createDeath(Image[] images) {		
-		death = createAnimation(images);
-		return death;
-	}
-
-	public Animation createMove(Image[] images) {		
-		move = createAnimation(images);
-		return move;
-	}		
+	public AnimationFactory getFactory() {		
+		return AnimationFactory.getInstance(this);
+	}			
 	
 	public void playIdle() {		
 		playAnimation(idle);
