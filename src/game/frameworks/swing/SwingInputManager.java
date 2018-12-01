@@ -3,8 +3,9 @@ package game.frameworks.swing;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class SwingInputManager implements KeyListener{
-	
+import game.input.InputManager;
+
+public class SwingInputManager implements KeyListener, InputManager{
 	private boolean[] keys = new boolean[256];
 
 	@Override

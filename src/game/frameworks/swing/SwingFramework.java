@@ -20,19 +20,21 @@ public class SwingFramework implements Framework {
 		jframe.setResizable(false);
 		jframe.setLocationRelativeTo(null);
 		jframe.setVisible(true);
-		jframe.setFocusable(false);		
 		
 		Canvas canvas = new Canvas();
 //		canvas.setSize(width, height);
 		canvas.setPreferredSize(new Dimension(width, height));
 		canvas.setMaximumSize(new Dimension(width, height));
 		canvas.setMinimumSize(new Dimension(width, height));	
-		
-		jframe.add(canvas);
+		canvas.setFocusable(false);	
+		jframe.add(canvas);		
 		jframe.pack();	
 		
-		display = new SwingDisplay(canvas);
-//		inputManager = new Swing
+		display = new SwingDisplay(canvas);				
+		
+		SwingInputManager sim = new SwingInputManager();
+		jframe.addKeyListener(sim);
+		inputManager = sim;		
 	}
 	
 	@Override
