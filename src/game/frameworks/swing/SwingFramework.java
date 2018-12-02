@@ -34,7 +34,7 @@ public class SwingFramework implements Framework {
 		
 		SwingInputManager sim = new SwingInputManager();
 		jframe.addKeyListener(sim);
-		inputManager = sim;		
+		inputManager = sim;	
 	}
 	
 	@Override
