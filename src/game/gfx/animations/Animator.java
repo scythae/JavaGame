@@ -1,46 +1,45 @@
 package game.gfx.animations;
 
-public class Animator {	
-	Animation idle, birth, death, move;	
+public class Animator {
+	Animation idle, birth, death, move;
 	private Animation currentAnimation;
-	
-	
+
+
 	protected void tick() {
 		if (currentAnimation != null)
-			currentAnimation.tick();		
+			currentAnimation.tick();
 	}
-	
-	protected void render(int x, int y) {
+
+	public void render(int x, int y) {
 		if (currentAnimation != null)
 			currentAnimation.render(x, y);
-	}	
-	
+	}
+
 	private void playAnimation(Animation newAnimation) {
 		if (newAnimation == currentAnimation || newAnimation == null)
-			return;		
-		
+			return;
+
 		currentAnimation = newAnimation ;
-		currentAnimation.reset();
 		currentAnimation.play();
-	}	
-	
-	public AnimationFactory getFactory() {		
+	}
+
+	public AnimationFactory getFactory() {
 		return AnimationFactory.getInstance(this);
-	}			
-	
-	public void playIdle() {		
+	}
+
+	public void playIdle() {
 		playAnimation(idle);
-	}		
-	
-	public void playBirth() {		
+	}
+
+	public void playBirth() {
 		playAnimation(birth);
 	}
-	
-	public void playDeath() {		
+
+	public void playDeath() {
 		playAnimation(death);
 	}
 
-	public void playMove() {		
+	public void playMove() {
 		playAnimation(move);
-	}	
+	}
 }

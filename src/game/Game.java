@@ -1,9 +1,10 @@
 package game;
 
-import game.display.Display;
+import game.frameworks.Display;
 import game.frameworks.Framework;
+import game.frameworks.InputManager;
 import game.frameworks.swing.SwingFramework;
-import game.input.InputManager;
+import game.gfx.Assets;
 import game.state.GameState;
 import game.state.State;
 
@@ -32,15 +33,18 @@ public class Game implements Runnable{
 		this.title = title;
 
 		instance = this;
+
+		init();
 	}
 
 	private void init() {
 		framework = new SwingFramework(title, width, height);
 		display = framework.GetDisplay();
+		display.setScale(3);
+
 		input = framework.GetInputManager();
 
 		Assets.init();
-
 
 		gameState = new GameState();
 		State.setState(gameState);
@@ -61,6 +65,9 @@ public class Game implements Runnable{
 	}
 
 	private void tick() {
+		if (input.cancel())
+			stop();
+
 		if (gameState != null)
 			gameState.tick();
 	}
@@ -81,8 +88,17 @@ public class Game implements Runnable{
 
 	@Override
 	public void run() {
-		init();
+		try {
+			loop();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
+		if (framework != null)
+			framework.close();
+	}
+
+	private void loop() throws InterruptedException {
 		long now, lastTime;
 		double delta;
 		lastTime = System.nanoTime();
@@ -90,8 +106,10 @@ public class Game implements Runnable{
 		while (running) {
 			now = System.nanoTime();
 			delta = now - lastTime;
-			if (delta < nanoSecPerFrame)
+			if (delta < nanoSecPerFrame) {
+				Thread.sleep(1);
 				continue;
+			}
 
 			lastTime = now;
 			fps = (int) Math.round(nanoSecPerSec / delta);
@@ -99,8 +117,6 @@ public class Game implements Runnable{
 			tick();
 			renderWrap();
 		}
-
-		stop();
 	}
 
 	public synchronized void start() {
@@ -113,15 +129,6 @@ public class Game implements Runnable{
 	}
 
 	public synchronized void stop() {
-		if (!running)
-			return;
-
 		running = false;
-		try {
-			thread.join();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
 	}
-
 }

@@ -4,41 +4,34 @@ import game.gfx.animations.Animator;
 
 public abstract class Entity {
 	protected float x, y;
-	protected Animator animator;
-	private AnimatorTickAndRender animatorTickAndRender;
-	
+	private AnimatorTickAndRender animatorTickAndRender = new AnimatorTickAndRender();
+	protected Animator animator = animatorTickAndRender;
+
 	public Entity(float x, float y) {
 		this.x = x;
 		this.y = y;
-		animatorTickAndRender = new AnimatorTickAndRender();
-		animator = animatorTickAndRender;
-	}
-	
-	public void tick() {
-		animatorTickAndRender.tick();
-		
-		tickEntity();		
-	}	
-	
-	protected abstract void tickEntity();
-	
-	public void render() {
-		animatorTickAndRender.render((int) x, (int) y);
-		
-		renderEntity();
+		initAnimator();
 	}
 
-	protected abstract void renderEntity();
-	
-	private class AnimatorTickAndRender extends Animator {		
+	public Entity() {
+		initAnimator();
+	}
+
+	public void tick() {
+		animatorTickAndRender.tick();
+
+		tickEntity();
+	}
+
+	protected abstract void tickEntity();
+	protected abstract void initAnimator();
+
+	public abstract void render();
+
+	private class AnimatorTickAndRender extends Animator {
 		@Override
 		public void tick() {
-			super.tick();		
+			super.tick();
 		}
-		
-		@Override
-		public void render(int x, int y) {
-			super.render(x, y);
-		}			
-	}	
+	}
 }

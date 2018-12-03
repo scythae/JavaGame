@@ -1,21 +1,26 @@
 package game.state;
 
 import game.entities.creature.Player;
+import game.worlds.World;
 
-public class GameState extends State{	
+public class GameState extends State{
 	private Player player;
-	
-	public GameState() {		
+	private World world;
+
+	public GameState() {
 		player = new Player(20, 0);
+		world = new World();
 	}
-	
+
 	@Override
 	public void tick() {
-		player.tick();		
+		world.tick();
+		player.tick();
 	}
 
 	@Override
 	public void render() {
+		world.render();
 		player.render();
 	}
 }

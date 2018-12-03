@@ -5,7 +5,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import game.display.Display;
+import game.frameworks.Display;
 import game.gfx.Image;
 
 class SwingImage implements Image{
