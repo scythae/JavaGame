@@ -1,13 +1,15 @@
 package game.worlds;
 
+import game.Game;
 import game.entities.tiles.Grass;
+import game.entities.tiles.Stone;
 import game.entities.tiles.Tile;
 import game.entities.tiles.Water;
+import game.gfx.Assets;
+import game.utils.Point;
 
 public class World {
-	private Tile[][] tiles;
 	private Tile grass, water, stone;
-
 
 //	private boolean[][] grassMap, waterMap;
 
@@ -16,41 +18,60 @@ public class World {
 	}
 
 	private void initTiles() {
-		int column = 10;
-		int row = 4;
+		int width = 10;
+		int height = 4;
 
-		tiles = new Tile[column][row];
+		Point[] grassPositions = new Point[width * height];
 
-		for (column = 0; column < tiles.length; column++)
-			for (row = 0; row < tiles[column].length; row++) {
-				tiles[column][row] = new Grass(column, row);
-				tiles[column][row].addChildTile(new Water(column, row));
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++) {
+				grassPositions[x + y * width] = new Point(x, y);
 			}
 
-//		grass = new Grass();
-//		water = new Water();
-//		stone = new Stone();
+		width = 3;
+		height = 1;
+		Point[] stonePositions = new Point[width * height];
+
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++) {
+				stonePositions[x + y * width] = new Point(x + 2, y + 2);
+			}
+
+		width = 3;
+		height = 2;
+		Point[] waterPositions = new Point[width * height];
+
+		for (int y = 0; y < height; y++)
+			for (int x = 0; x < width; x++) {
+				waterPositions[x + y * width] = new Point(x + 4, y + 2);
+			}
+
+		grass = new Grass();
+		stone = new Stone();
+		water = new Water();
+
+		grass.setPositions(grassPositions);
+		stone.setPositions(stonePositions);
+		water.setPositions(waterPositions);
 	}
 
-	public void tick() {
-		for (Tile[] row : tiles)
-			for (Tile tile : row)
-				tile.tick();
+	private boolean night;
 
-//		grass.tick();
-//		stone.tick();
-//		water.tick();
+	public void tick() {
+		grass.tick();
+		stone.tick();
+		water.tick();
+
+		if (Game.getInput().action())
+			night = !night;
 	}
 
 	public void render() {
-		for (Tile[] row : tiles)
-			for (Tile tile : row)
-				tile.render();
+		grass.render();
+		stone.render();
+		water.render();
 
-//		grass.render();
-//		stone.render();
-//		water.render();
-
-//		Assets.NightLayer.draw(0, 0);
+		if (night)
+			Assets.NightLayer.draw(0, 0);
 	}
 }

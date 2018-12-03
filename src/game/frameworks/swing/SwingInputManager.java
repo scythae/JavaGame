@@ -65,4 +65,9 @@ class SwingInputManager implements KeyListener, InputManager{
 	public boolean cancel() {
 		return keys[KeyEvent.VK_ESCAPE];
 	}
+
+	@Override
+	public boolean action() {
+		return keys[KeyEvent.VK_SPACE];
+	}
 }

@@ -25,6 +25,8 @@ public class Assets {
 			sheet.getSprite(0, 1), sheet.getSprite(1, 1), sheet.getSprite(2, 1)
 		};
 
+
+		sheet = null;
 		NightLayer = createImage("/textures/NightLayer.png");
 	}
 

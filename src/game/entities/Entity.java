@@ -3,32 +3,29 @@ package game.entities;
 import game.gfx.animations.Animator;
 
 public abstract class Entity {
-	protected float x, y;
-	private AnimatorTickAndRender animatorTickAndRender = new AnimatorTickAndRender();
-	protected Animator animator = animatorTickAndRender;
+	private AnimatorTick animatorTick = new AnimatorTick();
+	protected Animator animator = animatorTick;
 
-	public Entity(float x, float y) {
-		this.x = x;
-		this.y = y;
+	@SuppressWarnings("unused")
+	private boolean animatorInitialized = getAnimatorInitialized();
+
+	private boolean getAnimatorInitialized() {
 		initAnimator();
+		return true;
 	}
 
-	public Entity() {
-		initAnimator();
-	}
+	protected abstract void initAnimator();
 
 	public void tick() {
-		animatorTickAndRender.tick();
-
+		animatorTick.tick();
 		tickEntity();
 	}
 
 	protected abstract void tickEntity();
-	protected abstract void initAnimator();
 
 	public abstract void render();
 
-	private class AnimatorTickAndRender extends Animator {
+	private class AnimatorTick extends Animator {
 		@Override
 		public void tick() {
 			super.tick();

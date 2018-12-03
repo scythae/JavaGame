@@ -6,4 +6,5 @@ public interface InputManager {
 	boolean left();
 	boolean right();
 	boolean cancel();
+	boolean action();
 }

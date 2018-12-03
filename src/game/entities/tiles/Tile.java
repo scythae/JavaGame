@@ -8,15 +8,7 @@ public abstract class Tile extends Entity{
 
 	protected boolean walkable;
 	private Tile childTile;
-	private Point[] positions;
-
-	public Tile(int column, int row) {
-		super(column * size.x, row * size.y);
-	}
-
-	public Tile() {
-		super();
-	}
+	private Point[] positions = {new Point(0, 0)};
 
 	@Override
 	protected void tickEntity() {
@@ -26,7 +18,8 @@ public abstract class Tile extends Entity{
 
 	@Override
 	public void render() {
-		animator.render((int) x, (int) y);
+		for (Point position : positions)
+			animator.render(position.x, position.y);
 
 		if (childTile != null)
 			childTile.render();
@@ -44,6 +37,9 @@ public abstract class Tile extends Entity{
 	}
 
 	public void setPositions(Point[] positions) {
-		this.positions = positions;
+		this.positions = new Point[positions.length];
+
+		for (int i = 0; i < positions.length; i++)
+			this.positions[i] = new Point(positions[i].x * size.x, positions[i].y * size.y);
 	}
 }
