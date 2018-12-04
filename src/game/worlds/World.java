@@ -7,11 +7,14 @@ import game.entities.tiles.Tile;
 import game.entities.tiles.Water;
 import game.gfx.Assets;
 import game.utils.Point;
+import game.utils.Rect;
 
 public class World {
 	private Tile grass, water, stone;
 
-//	private boolean[][] grassMap, waterMap;
+	private Rect[] tileCollisionBoxes;
+
+	private boolean night;
 
 	public World() {
 		initTiles();
@@ -53,9 +56,17 @@ public class World {
 		grass.setPositions(grassPositions);
 		stone.setPositions(stonePositions);
 		water.setPositions(waterPositions);
+
+		tileCollisionBoxes = stone.getCollisionBoxes();
 	}
 
-	private boolean night;
+	public boolean isPlaceOccupied(Rect targetBox) {
+		for (Rect tileBox : tileCollisionBoxes)
+			if (targetBox.collidesWith(tileBox))
+				return true;
+
+		return false;
+	}
 
 	public void tick() {
 		grass.tick();

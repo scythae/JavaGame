@@ -4,7 +4,7 @@ import game.gfx.Assets;
 
 public class Grass extends Tile{
 	@Override
-	public void initAnimator() {
+	protected void initialize() {
 		animator.getFactory().setImage(Assets.Grass).createIdle();
 		animator.playIdle();
 	}

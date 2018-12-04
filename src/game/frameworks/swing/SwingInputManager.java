@@ -8,7 +8,7 @@ import game.utils.chain.Chain;
 
 class SwingInputManager implements KeyListener, InputManager{
 	private boolean[] keys = new boolean[256];
-	private Chain<Integer> pressedKeys = new Chain<Integer>();
+	private Chain<Integer> pressedDirectionKeys = new Chain<Integer>();
 
 	@Override
 	public void keyPressed(KeyEvent e) {
@@ -18,7 +18,8 @@ class SwingInputManager implements KeyListener, InputManager{
 			return;
 
 		keys[keyCode] = true;
-		pressedKeys.add(keyCode);
+		if (isDirectionKey(keyCode))
+			pressedDirectionKeys.add(keyCode);
 	}
 
 	@Override
@@ -26,7 +27,8 @@ class SwingInputManager implements KeyListener, InputManager{
 		int keyCode = e.getKeyCode();
 
 		keys[keyCode] = false;
-		pressedKeys.remove(keyCode);
+		if (isDirectionKey(keyCode))
+			pressedDirectionKeys.remove(keyCode);
 	}
 
 	@Override
@@ -34,31 +36,36 @@ class SwingInputManager implements KeyListener, InputManager{
 
 	@Override
 	public boolean up() {
-		return directionKey(KeyEvent.VK_W);
+		return isDirectionKeyPressed(KeyEvent.VK_W);
 	}
 
 	@Override
 	public boolean down() {
-		return directionKey(KeyEvent.VK_S);
+		return isDirectionKeyPressed(KeyEvent.VK_S);
 	}
 
 	@Override
 	public boolean left() {
-		return directionKey(KeyEvent.VK_A);
+		return isDirectionKeyPressed(KeyEvent.VK_A);
 	}
 
 	@Override
 	public boolean right() {
-		return directionKey(KeyEvent.VK_D);
+		return isDirectionKeyPressed(KeyEvent.VK_D);
 	}
 
-	private boolean directionKey(int keyCode) {
-		return keys[keyCode] && pressedKeys.getLast() == keyCode;
+	private boolean isDirectionKeyPressed(int keyCode) {
+		return keys[keyCode] && pressedDirectionKeys.getLast() == keyCode;
+	}
+
+	private boolean isDirectionKey(int keyCode) {
+		return keyCode == KeyEvent.VK_W || keyCode == KeyEvent.VK_S ||
+				keyCode == KeyEvent.VK_A ||keyCode == KeyEvent.VK_D;
 	}
 
 	@SuppressWarnings("unused")
 	private void showPressedKeys() {
-		System.out.println(pressedKeys.toString());
+		System.out.println(pressedDirectionKeys.toString());
 	}
 
 	@Override

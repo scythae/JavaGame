@@ -36,12 +36,12 @@ public class SwingFramework implements Framework {
 	}
 
 	@Override
-	public Display GetDisplay() {
+	public Display getDisplay() {
 		return display;
 	}
 
 	@Override
-	public InputManager GetInputManager() {
+	public InputManager getInputManager() {
 		return inputManager;
 	}
 

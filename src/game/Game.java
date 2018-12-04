@@ -39,10 +39,10 @@ public class Game implements Runnable{
 
 	private void init() {
 		framework = new SwingFramework(title, width, height);
-		display = framework.GetDisplay();
+		display = framework.getDisplay();
 		display.setScale(3);
 
-		input = framework.GetInputManager();
+		input = framework.getInputManager();
 
 		Assets.init();
 
@@ -54,6 +54,10 @@ public class Game implements Runnable{
 
 	static public Framework getFramework() {
 		return instance.framework;
+	}
+
+	static public Display getDisplay() {
+		return instance.display;
 	}
 
 	static public InputManager getInput() {

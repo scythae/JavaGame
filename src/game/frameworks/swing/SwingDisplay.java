@@ -1,12 +1,14 @@
 package game.frameworks.swing;
 
 import java.awt.Canvas;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 
 import game.frameworks.Display;
 import game.gfx.Image;
+import game.utils.Rect;
 
 class SwingDisplay implements Display{
 	private Canvas canvas;
@@ -14,6 +16,7 @@ class SwingDisplay implements Display{
 	static private Graphics g;
 	static protected int scale = 1;
 	private int width, height;
+	private Color lastColor;
 
 	public SwingDisplay(Canvas canvas) {
 		this.canvas = canvas;
@@ -21,6 +24,7 @@ class SwingDisplay implements Display{
 		this.height = canvas.getHeight();
 
 		SwingImage.display = this;
+		lastColor = Color.black;
 	}
 
 	@Override
@@ -67,6 +71,22 @@ class SwingDisplay implements Display{
 	@Override
 	public void setScale(int times) {
 		scale = times;
+	}
+
+	@Override
+	public void drawRect(Rect rect) {
+		g.fillRect(rect.left * scale, rect.top * scale, rect.getWidth() * scale, rect.getHeight() * scale);
+	}
+
+	@Override
+	public void setColor(int red, int green, int blue, int alpha) {
+		lastColor = g.getColor();
+		g.setColor(new Color(red, green, blue, alpha));
+	}
+
+	@Override
+	public void setPreviousColor() {
+		g.setColor(lastColor);
 	}
 }
 

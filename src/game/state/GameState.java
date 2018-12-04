@@ -10,6 +10,7 @@ public class GameState extends State{
 	public GameState() {
 		player = new Player(20, 0);
 		world = new World();
+		player.setWorld(world);
 	}
 
 	@Override
