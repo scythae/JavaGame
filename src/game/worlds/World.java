@@ -11,43 +11,47 @@ import game.utils.Rect;
 
 public class World {
 	private Tile grass, water, stone;
-
 	private Rect[] tileCollisionBoxes;
-
 	private boolean night;
+	private int height, width;
 
 	public World() {
 		initTiles();
 	}
 
 	private void initTiles() {
-		int width = 10;
-		int height = 4;
+		int xCount = 10;
+		int yCount = 4;
 
-		Point[] grassPositions = new Point[width * height];
+		width = xCount * Tile.size.x;
+		height = yCount * Tile.size.y;
 
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++) {
-				grassPositions[x + y * width] = new Point(x, y);
+		Point[] grassPositions = new Point[xCount * yCount];
+
+		for (int y = 0; y < yCount; y++)
+			for (int x = 0; x < xCount; x++) {
+				grassPositions[x + y * xCount] = new Point(x, y);
 			}
 
-		width = 3;
-		height = 1;
-		Point[] stonePositions = new Point[width * height];
+		xCount = 3;
+		yCount = 1;
+		Point[] stonePositions = new Point[xCount * yCount];
 
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++) {
-				stonePositions[x + y * width] = new Point(x + 2, y + 2);
+		for (int y = 0; y < yCount; y++)
+			for (int x = 0; x < xCount; x++) {
+				stonePositions[x + y * xCount] = new Point(x + 2, y + 2);
 			}
 
-		width = 3;
-		height = 2;
-		Point[] waterPositions = new Point[width * height];
+		xCount = 3;
+		yCount = 2;
+		Point[] waterPositions = new Point[xCount * yCount];
 
-		for (int y = 0; y < height; y++)
-			for (int x = 0; x < width; x++) {
-				waterPositions[x + y * width] = new Point(x + 4, y + 2);
+		for (int y = 0; y < yCount; y++)
+			for (int x = 0; x < xCount; x++) {
+				waterPositions[x + y * xCount] = new Point(x + 4, y + 2);
 			}
+
+
 
 		grass = new Grass();
 		stone = new Stone();
@@ -84,5 +88,13 @@ public class World {
 
 		if (night)
 			Assets.NightLayer.draw(0, 0);
+	}
+
+	public int getHeight() {
+		return height;
+	}
+
+	public int getWidth() {
+		return width;
 	}
 }

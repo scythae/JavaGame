@@ -12,4 +12,6 @@ public interface Display {
 	void setScale(int times);
 	void setColor(int red, int green, int blue, int alpha);
 	void setPreviousColor();
+	int getWidth();
+	int getHeight();
 }

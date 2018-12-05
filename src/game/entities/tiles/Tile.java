@@ -1,13 +1,15 @@
 package game.entities.tiles;
 
+import game.camera.Camera;
+import game.camera.ObservableByCamera;
 import game.entities.Entity;
+import game.gfx.Image;
 import game.utils.Point;
 import game.utils.Rect;
 
-public abstract class Tile extends Entity{
+public abstract class Tile extends Entity implements ObservableByCamera{
 	public static final Point size = new Point(32, 32);
 
-	protected boolean walkable;
 	private Point[] positions = {new Point(0, 0)};
 
 	protected void initCollisionBox(int left, int top, int right, int bottom) {
@@ -17,7 +19,12 @@ public abstract class Tile extends Entity{
 	@Override
 	public void render() {
 		for (Point position : positions)
-			animator.render(position.x, position.y);
+			Camera.getActiveCamera().draw(this, position);
+	}
+
+	@Override
+	public Image getImage() {
+		return animator.getImage();
 	}
 
 	public Rect[] getCollisionBoxes() {

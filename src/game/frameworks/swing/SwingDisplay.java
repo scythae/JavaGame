@@ -88,5 +88,15 @@ class SwingDisplay implements Display{
 	public void setPreviousColor() {
 		g.setColor(lastColor);
 	}
+
+	@Override
+	public int getWidth() {
+		return width / scale;
+	}
+
+	@Override
+	public int getHeight() {
+		return height / scale;
+	}
 }
 

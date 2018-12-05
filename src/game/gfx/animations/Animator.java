@@ -1,18 +1,21 @@
 package game.gfx.animations;
 
+import game.gfx.Image;
+
 public class Animator {
 	Animation idle, birth, death, move;
 	private Animation currentAnimation;
-
 
 	protected void tick() {
 		if (currentAnimation != null)
 			currentAnimation.tick();
 	}
 
-	public void render(int x, int y) {
-		if (currentAnimation != null)
-			currentAnimation.render(x, y);
+	public Image getImage() {
+		if (currentAnimation == null)
+			return null;
+
+		return currentAnimation.getImage();
 	}
 
 	private void playAnimation(Animation newAnimation) {

@@ -1,8 +1,12 @@
 package game.entities.creature;
 
+import game.camera.Camera;
+import game.camera.ObservableByCamera;
 import game.entities.Entity;
+import game.gfx.Image;
+import game.utils.Point;
 
-public abstract class Creature extends Entity{
+public abstract class Creature extends Entity implements ObservableByCamera{
 	protected float x, y;
 	protected int health;
 
@@ -16,8 +20,16 @@ public abstract class Creature extends Entity{
 		this.y = y;
 	}
 
+	private Point creaturePosition = new Point();
 	@Override
 	public void render () {
-		animator.render((int) x, (int) y);
+		creaturePosition.x = (int) x;
+		creaturePosition.y = (int) y;
+		Camera.getActiveCamera().draw(this, creaturePosition);
+	}
+
+	@Override
+	public Image getImage() {
+		return animator.getImage();
 	}
 }

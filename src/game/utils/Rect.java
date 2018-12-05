@@ -56,6 +56,11 @@ public class Rect {
 		return this;
 	}
 
+	public Point getCenter() {
+		return new Point((this.left + this.right) / 2, (this.top + this.bottom) / 2);
+	}
+
+
 	@Override
 	public String toString() {
 		return left + " " + top + " " +right + " " + bottom;
@@ -86,6 +91,10 @@ public class Rect {
 		b = new Rect(10, -5, 20, 15);
 		a.shift(10, -5);
 		check(a.equalTo(b));
+
+		a = new Rect(0, 0, 10, 20);
+		Point center = new Point(5, 10);
+		check(a.getCenter().equalTo(center));
 
 		return true;
 	}
