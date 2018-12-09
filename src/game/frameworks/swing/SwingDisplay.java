@@ -14,7 +14,6 @@ class SwingDisplay implements Display{
 	private Canvas canvas;
 	static private BufferStrategy bs;
 	static private Graphics g;
-	static protected int scale = 1;
 	private int width, height;
 	private Color lastColor;
 
@@ -23,17 +22,29 @@ class SwingDisplay implements Display{
 		this.width = canvas.getWidth();
 		this.height = canvas.getHeight();
 
-		SwingImage.display = this;
 		lastColor = Color.black;
 	}
 
 	@Override
 	public void draw(Image image, int x, int y) {
 		BufferedImage bi = ((SwingImage) image).getBufferedImage();
-		x = x * scale;
-		y = y * scale;
-		int xSize = bi.getWidth() * scale;
-		int ySize = bi.getHeight() * scale;
+		g.drawImage(bi, x, y, null);
+	}
+
+	@Override
+	public void draw(Image image, int x, int y, float zoom) {
+		BufferedImage bi = ((SwingImage) image).getBufferedImage();
+
+		float xSizef = bi.getWidth() * zoom;
+		float ySizef = bi.getHeight() * zoom;
+
+		int xSize = (int) xSizef;
+		int ySize = (int) ySizef;
+
+		if (xSizef > xSize)
+			xSize++;
+		if (ySizef > ySize)
+			ySize++;
 
 		g.drawImage(bi, x, y, xSize, ySize, null);
 	}
@@ -55,7 +66,7 @@ class SwingDisplay implements Display{
 		}
 
 		g = bs.getDrawGraphics();
-		g.clearRect(0, 0, width * scale, height * scale);
+		g.clearRect(0, 0, width, height);
 	}
 
 	@Override
@@ -69,13 +80,8 @@ class SwingDisplay implements Display{
 	}
 
 	@Override
-	public void setScale(int times) {
-		scale = times;
-	}
-
-	@Override
 	public void drawRect(Rect rect) {
-		g.fillRect(rect.left * scale, rect.top * scale, rect.getWidth() * scale, rect.getHeight() * scale);
+		g.fillRect(rect.left, rect.top, rect.getWidth(), rect.getHeight());
 	}
 
 	@Override
@@ -91,12 +97,12 @@ class SwingDisplay implements Display{
 
 	@Override
 	public int getWidth() {
-		return width / scale;
+		return width;
 	}
 
 	@Override
 	public int getHeight() {
-		return height / scale;
+		return height;
 	}
 }
 
