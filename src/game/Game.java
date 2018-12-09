@@ -8,24 +8,18 @@ import game.gfx.Assets;
 import game.state.GameState;
 import game.state.State;
 
-public class Game implements Runnable{
+public class Game implements GameLoopDelegate{
 	static private Game instance;
-
 	private int width, height;
 	private String title;
-
-	private Thread thread;
-	private Boolean running = false;
 
 	private Framework framework;
 	private Display display;
 	private InputManager input;
 
-	private int fps;
-	private double nanoSecPerFrame;
-	private final double nanoSecPerSec = 1_000_000_000;
+	private GameLoop gameLoop;
 
-	State gameState;
+	private State gameState;
 
 	public Game(String title, int width, int height) {
 		this.width = width;
@@ -34,6 +28,16 @@ public class Game implements Runnable{
 
 		instance = this;
 
+		start();
+	}
+
+	private void start() {
+		gameLoop = new GameLoop(this);
+		gameLoop.start();
+	}
+
+	@Override
+	public void onGameLoopStart() {
 		init();
 	}
 
@@ -46,8 +50,36 @@ public class Game implements Runnable{
 
 		gameState = new GameState();
 		State.setState(gameState);
+	}
 
-		setFrameRate(60);
+	@Override
+	public void onGameLoopIteration() {
+		tick();
+		render();
+	}
+
+	private void tick() {
+		if (input.cancel())
+			gameLoop.stop();
+
+		if (gameState != null)
+			gameState.tick();
+	}
+
+	private void render() {
+		display.drawBegin();
+
+		if (gameState != null)
+			gameState.render();
+
+		display.drawString("FPS " + gameLoop.getFps(), 0, height);
+		display.drawEnd();
+	}
+
+	@Override
+	public void onGameLoopFinish() {
+		if (framework != null)
+			framework.close();
 	}
 
 	static public Framework getFramework() {
@@ -60,77 +92,5 @@ public class Game implements Runnable{
 
 	static public InputManager getInput() {
 		return instance.input;
-	}
-
-	private void setFrameRate(int frameRate) {
-		nanoSecPerFrame = nanoSecPerSec / frameRate;
-	}
-
-	private void tick() {
-		if (input.cancel())
-			stop();
-
-		if (gameState != null)
-			gameState.tick();
-	}
-
-	private void render() {
-		if (gameState != null)
-			gameState.render();
-	}
-
-	private void renderWrap() {
-		display.drawBegin();
-
-		render();
-
-		display.drawString("FPS " + fps, 0, height);
-		display.drawEnd();
-	}
-
-	@Override
-	public void run() {
-		try {
-			loop();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-
-		if (framework != null)
-			framework.close();
-	}
-
-	private void loop() throws InterruptedException {
-		long now, lastTime;
-		double delta;
-		lastTime = System.nanoTime();
-
-		while (running) {
-			now = System.nanoTime();
-			delta = now - lastTime;
-			if (delta < nanoSecPerFrame) {
-				Thread.sleep(1);
-				continue;
-			}
-
-			lastTime = now;
-			fps = (int) Math.round(nanoSecPerSec / delta);
-
-			tick();
-			renderWrap();
-		}
-	}
-
-	public void start() {
-		if (running)
-			return;
-
-		running = true;
-		thread = new Thread(this);
-		thread.start();
-	}
-
-	public void stop() {
-		running = false;
 	}
 }
