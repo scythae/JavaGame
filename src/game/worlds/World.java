@@ -12,56 +12,50 @@ import game.utils.Rect;
 public class World {
 	private Tile grass, water, stone;
 	private Rect[] tileCollisionBoxes;
+	private Rect borders;
+
 	private boolean night;
-	private int height, width;
 
 	public World() {
 		initTiles();
 	}
 
 	private void initTiles() {
-		int xCount = 10;
-		int yCount = 4;
-
-		width = xCount * Tile.size.x;
-		height = yCount * Tile.size.y;
-
-		Point[] grassPositions = new Point[xCount * yCount];
-
-		for (int y = 0; y < yCount; y++)
-			for (int x = 0; x < xCount; x++) {
-				grassPositions[x + y * xCount] = new Point(x, y);
-			}
-
-		xCount = 3;
-		yCount = 1;
-		Point[] stonePositions = new Point[xCount * yCount];
-
-		for (int y = 0; y < yCount; y++)
-			for (int x = 0; x < xCount; x++) {
-				stonePositions[x + y * xCount] = new Point(x + 2, y + 2);
-			}
-
-		xCount = 3;
-		yCount = 2;
-		Point[] waterPositions = new Point[xCount * yCount];
-
-		for (int y = 0; y < yCount; y++)
-			for (int x = 0; x < xCount; x++) {
-				waterPositions[x + y * xCount] = new Point(x + 4, y + 2);
-			}
-
-
-
+		borders = new Rect(0, 0, 10, 4);
 		grass = new Grass();
 		stone = new Stone();
 		water = new Water();
 
-		grass.setPositions(grassPositions);
-		stone.setPositions(stonePositions);
-		water.setPositions(waterPositions);
+		RoomGenerator roomGen = new RoomGenerator();
+		for (Room room : roomGen.getRooms())
+			makeRoom(room.getBounds());
+
+
+
+//		grass.addPositions(getTilesRect(0, 0, 10, 4));
+//		stone.addPositions(getTilesRect(2, 2, 3, 1));
+//		water.addPositions(getTilesRect(3, 2, 3, 2));
 
 		tileCollisionBoxes = stone.getCollisionBoxes();
+	}
+
+	private void makeRoom(Rect roomBounds) {
+		Tile tile;
+		for (Point p : roomBounds) {
+			p = p.clone();
+
+			tile = roomBounds.isPointOnPerimeter(p) ? stone : grass;
+			tile.addPosition(p);
+		}
+
+		extendWorldBorders(roomBounds);
+	}
+
+	private void extendWorldBorders(Rect room) {
+		borders.left = Math.min(borders.left, room.left);
+		borders.right = Math.min(borders.right, room.right);
+		borders.top = Math.max(borders.top, room.top);
+		borders.bottom = Math.max(borders.bottom, room.bottom);
 	}
 
 	public boolean isPlaceOccupied(Rect targetBox) {
@@ -88,10 +82,10 @@ public class World {
 	}
 
 	public int getHeight() {
-		return height;
+		return borders.getHeight() * Tile.size.x;
 	}
 
 	public int getWidth() {
-		return width;
+		return borders.getWidth() * Tile.size.y;
 	}
 }

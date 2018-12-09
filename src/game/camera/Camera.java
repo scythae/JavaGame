@@ -17,6 +17,17 @@ public class Camera {
 		setZoom(1);
 	}
 
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
+		initSize();
+		setRefinedBounds();
+	}
+
+	private void initSize() {
+		width = (int) (Game.getDisplay().getWidth() / zoom);
+		height = (int) (Game.getDisplay().getHeight() / zoom);
+	}
+
 	public void setTarget(TargetableByCamera target) {
 		this.camerasTarget = target;
 	}
@@ -47,17 +58,6 @@ public class Camera {
 		bounds = nonRefinedBounds.clone();
 		bounds.right = Math.max(bounds.left, bounds.right - width);
 		bounds.bottom = Math.max(bounds.top, bounds.bottom - height);
-	}
-
-	private void initSize() {
-		width = (int) (Game.getDisplay().getWidth() / zoom);
-		height = (int) (Game.getDisplay().getHeight() / zoom);
-	}
-
-	public void setZoom(float zoom) {
-		this.zoom = zoom;
-		initSize();
-		setRefinedBounds();
 	}
 
 	private Point offsetPosition = new Point();

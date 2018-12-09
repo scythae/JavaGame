@@ -1,6 +1,8 @@
 package game.utils;
 
-public class Rect {
+import java.util.Iterator;
+
+public class Rect implements Iterable<Point>{
 	public int left, top, right, bottom;
 
 	static {
@@ -21,11 +23,11 @@ public class Rect {
 	}
 
 	public int getWidth() {
-		return right - left;
+		return right - left + 1;
 	}
 
 	public int getHeight() {
-		return bottom - top;
+		return bottom - top + 1;
 	}
 
 	public boolean collidesWith(Rect rect) {
@@ -38,7 +40,7 @@ public class Rect {
 	}
 
 	public boolean isEmpty() {
-		return getWidth() == 0 || getHeight() == 0;
+		return getWidth() < 0 || getHeight() < 0;
 	}
 
 	public Rect shift(int xDelta, int yDelta) {
@@ -63,6 +65,9 @@ public class Rect {
 		return new Point((this.left + this.right) / 2, (this.top + this.bottom) / 2);
 	}
 
+	public boolean isPointOnPerimeter(Point p) {
+		return p.x == left || p.x == right || p.y == top || p.y == bottom;
+	}
 
 	@Override
 	public String toString() {
@@ -105,5 +110,31 @@ public class Rect {
 
 	static private void testFail() {
 		throw new RuntimeException(Rect.class.getName() + " failed test.");
+	}
+
+	@Override
+	public Iterator<Point> iterator() {
+		return new Iterator<Point>() {
+			Point current = new Point(left, top);
+			Point result = new Point();
+
+			@Override
+			public boolean hasNext() {
+				return current.x <= right && current.y <= bottom;
+			}
+
+			@Override
+			public Point next() {
+				result.copyFrom(current);
+
+				if (current.x < right)
+					current.x++;
+				else {
+					current.x = left;
+					current.y++;
+				}
+				return result;
+			}
+		};
 	}
 }

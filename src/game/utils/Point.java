@@ -23,6 +23,11 @@ public class Point {
 		return this;
 	}
 
+	@Override
+	public Point clone() {
+		return new Point().copyFrom(this);
+	}
+
 	public boolean equalTo(Point source) {
 		return this.x == source.x && this.y == source.y;
 	}

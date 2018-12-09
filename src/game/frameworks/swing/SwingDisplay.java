@@ -19,8 +19,8 @@ class SwingDisplay implements Display{
 
 	public SwingDisplay(Canvas canvas) {
 		this.canvas = canvas;
-		this.width = canvas.getWidth();
-		this.height = canvas.getHeight();
+		width = canvas.getWidth();
+		height = canvas.getHeight();
 
 		lastColor = Color.black;
 	}

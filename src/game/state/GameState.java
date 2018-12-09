@@ -17,7 +17,7 @@ public class GameState extends State{
 		world = new World();
 		Rect worldArea = new Rect(0, 0, world.getWidth(), world.getHeight());
 
-		player = new Player(60, 20);
+		player = new Player(60, 60);
 		player.setWorld(world);
 
 		camera = new Camera();
