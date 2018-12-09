@@ -4,6 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
 import game.frameworks.InputManager;
+import game.utils.Utils;
 import game.utils.chain.Chain;
 
 class SwingInputManager implements KeyListener, InputManager{
@@ -55,6 +56,12 @@ class SwingInputManager implements KeyListener, InputManager{
 	}
 
 	private boolean isDirectionKeyPressed(int keyCode) {
+		if (keys == null)
+			Utils.Debug("Keys is null");
+
+		if (pressedDirectionKeys == null)
+			Utils.Debug("pressedDirectionKeys is null");
+
 		return keys[keyCode] && pressedDirectionKeys.getLast() == keyCode;
 	}
 
@@ -65,7 +72,7 @@ class SwingInputManager implements KeyListener, InputManager{
 
 	@SuppressWarnings("unused")
 	private void showPressedKeys() {
-		System.out.println(pressedDirectionKeys.toString());
+		Utils.Debug(pressedDirectionKeys);
 	}
 
 	@Override

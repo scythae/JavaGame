@@ -76,9 +76,6 @@ public class World {
 		grass.tick();
 		stone.tick();
 		water.tick();
-
-		if (Game.getInput().action())
-			night = !night;
 	}
 
 	public void render() {
@@ -87,7 +84,7 @@ public class World {
 		water.render();
 
 		if (night)
-			Assets.NightLayer.draw(0, 0);
+			Game.getDisplay().draw(Assets.NightLayer, 0, 0);
 	}
 
 	public int getHeight() {

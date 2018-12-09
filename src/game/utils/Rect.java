@@ -3,8 +3,11 @@ package game.utils;
 public class Rect {
 	public int left, top, right, bottom;
 
-	public Rect() {
+	static {
+		test();
 	}
+
+	public Rect() {}
 
 	public Rect(int left, int top, int right, int bottom) {
 		setBounds(left, top, right, bottom);
@@ -75,9 +78,7 @@ public class Rect {
 			this.bottom == rect.bottom;
 	}
 
-	@SuppressWarnings("unused")
-	static private boolean tested = test();
-	static public boolean test() {
+	static private void test() {
 		Rect a, b;
 		a = new Rect(0, 0, 10, 20);
 		b = new Rect(0, 0, 10, 20);
@@ -95,8 +96,6 @@ public class Rect {
 		a = new Rect(0, 0, 10, 20);
 		Point center = new Point(5, 10);
 		check(a.getCenter().equalTo(center));
-
-		return true;
 	}
 
 	static private void check(boolean condition) {

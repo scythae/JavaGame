@@ -40,8 +40,6 @@ public class Game implements Runnable{
 	private void init() {
 		framework = new SwingFramework(title, width, height);
 		display = framework.getDisplay();
-		display.setScale(3);
-
 		input = framework.getInputManager();
 
 		Assets.init();
@@ -123,7 +121,7 @@ public class Game implements Runnable{
 		}
 	}
 
-	public synchronized void start() {
+	public void start() {
 		if (running)
 			return;
 
@@ -132,7 +130,7 @@ public class Game implements Runnable{
 		thread.start();
 	}
 
-	public synchronized void stop() {
+	public void stop() {
 		running = false;
 	}
 }

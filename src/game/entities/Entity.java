@@ -8,12 +8,10 @@ public abstract class Entity {
 	protected Animator animator = animatorTick;
 	protected Rect localCollisionBox;
 
-	@SuppressWarnings("unused")
-	private boolean initialized = getInitialized();
-	private boolean getInitialized() {
+	{
 		initialize();
-		return true;
 	}
+
 	protected void initialize() {};
 
 	public void tick() {

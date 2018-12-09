@@ -5,20 +5,13 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
-import game.frameworks.Display;
 import game.gfx.Image;
 
 class SwingImage implements Image{
 	private BufferedImage bufferedImage;
-	
+
 	public BufferedImage getBufferedImage() {
 		return bufferedImage;
-	}
-
-	static public Display display;
-	
-	public void draw(int x, int y) {
-		display.draw(this, x, y);				
 	}
 
 	public SwingImage loadFromFile(String path) {
@@ -36,5 +29,5 @@ class SwingImage implements Image{
 		SwingImage result = new SwingImage();
 		result.bufferedImage = bufferedImage.getSubimage(x, y, width, height);
 		return result;
-	}		
-}	
+	}
+}

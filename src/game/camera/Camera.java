@@ -1,17 +1,21 @@
 package game.camera;
 
 import game.Game;
-import game.frameworks.Display;
 import game.gfx.Image;
 import game.utils.Point;
 import game.utils.Rect;
-import game.utils.Utils;
 
 public class Camera {
 	static private Camera activeCamera = new DefaultCamera();
 
 	private TargetableByCamera camerasTarget;
-	private Rect bounds;
+	private int width, height;
+	private Rect bounds, nonRefinedBounds;
+	private float zoom;
+
+	{
+		setZoom(1);
+	}
 
 	public void setTarget(TargetableByCamera target) {
 		this.camerasTarget = target;
@@ -27,31 +31,50 @@ public class Camera {
 
 	public void setBounds(Rect sourceBounds) {
 		if (sourceBounds == null) {
+			nonRefinedBounds = null;
 			bounds = null;
 			return;
 		}
 
-		bounds = sourceBounds.clone();
-		bounds.right = Math.max(bounds.left, bounds.right - Game.getDisplay().getWidth());
-		bounds.bottom = Math.max(bounds.top, bounds.bottom - Game.getDisplay().getHeight());
+		nonRefinedBounds = sourceBounds.clone();
+		setRefinedBounds();
+	}
+
+	private void setRefinedBounds() {
+		if (nonRefinedBounds == null)
+			return;
+
+		bounds = nonRefinedBounds.clone();
+		bounds.right = Math.max(bounds.left, bounds.right - width);
+		bounds.bottom = Math.max(bounds.top, bounds.bottom - height);
+	}
+
+	private void initSize() {
+		width = (int) (Game.getDisplay().getWidth() / zoom);
+		height = (int) (Game.getDisplay().getHeight() / zoom);
+	}
+
+	public void setZoom(float zoom) {
+		this.zoom = zoom;
+		initSize();
+		setRefinedBounds();
 	}
 
 	private Point offsetPosition = new Point();
-	public void draw(ObservableByCamera obj, Point initialPosition) {
-		Image image = obj.getImage();
+	public void draw(Image image, Point position) {
 		if (image == null)
 			return;
 
-		offsetPosition.copyFrom(initialPosition);
+		offsetPosition.copyFrom(position);
 
 		Point offset = getOffset();
 
-		if (obj == camerasTarget)
-			offsetPosition.shift(-offset.x, -offset.y);
-		else
-			offsetPosition.shift(-offset.x, -offset.y);
+		offsetPosition.shift(-offset.x, -offset.y);
 
-		image.draw(offsetPosition.x, offsetPosition.y);
+		offsetPosition.x *= zoom;
+		offsetPosition.y *= zoom;
+
+		Game.getDisplay().draw(image, offsetPosition.x, offsetPosition.y, zoom);
 	}
 
 	protected Point getOffset() {
@@ -62,8 +85,7 @@ public class Camera {
 	}
 
 	private Point centerAtDisplay(Point offset) {
-		Display d = Game.getDisplay();
-		return offset.shift(-d.getWidth() / 2, -d.getHeight() / 2);
+		return offset.shift(-width / 2, -height / 2);
 	}
 
 	private void limitByBounds(Point offset) {
@@ -81,8 +103,5 @@ public class Camera {
 		else
 		if (offset.y > bounds.bottom)
 			offset.y = bounds.bottom;
-
-		Utils.Debug(bounds);
-		Utils.Debug(offset);
 	}
 }
